@@ -1,0 +1,364 @@
+# 项目步骤
+
+## 目录
+
+[项目前端基础开发环境搭建](#jump1)
+
+[制作博客公用头部并形成组件](#jump2)
+
+[完成首页主体的两栏布局](#jump3)
+
+[利用List组件 制作博客列表](#jump4)
+
+[编写“博主介绍”组件](#jump5)
+
+[编写“通用广告”组件](#jump6)
+
+[博客底部的制作](#jump7)
+
+[博客List页的制作](#jump8)
+
+[博客详细页面制作](#jump9)
+
+[中台搭建1-安装egg.js开发环境](#jump10)
+
+[中台搭建2-RESTful API设计简介和路由配置](#jump11)
+
+[中台搭建3-Egg.js中连接mysql数据库](#jump12)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+---	
+
+<span id="jump1"></span>
+
+## 项目前端基础开发环境搭建
+
+### 用create-next-app快速创建项目
+
+1. 全局安装create-next-app：
+
+```shell
+cnpm install -g create-next-app
+```
+
+2. 使用脚手架创建项目：
+
+```shell
+npx create-next-app blog
+```
+
+3. 删除index.js中的多余内容，仅保留：
+
+```javascript
+import React from 'react'
+import Head from 'next/head'
+const Home = () => (
+  <>
+    <Head>
+      <title>Home</title>
+    </Head>
+ </>
+)
+export default Home
+```
+
+### 让Next支持CSS文件
+
+1. 安装@zeit/next-css包
+
+```shell
+cnpm i -S @zeit/next-css
+```
+
+2. 在blog根目录下，新建一个next.config.js文件
+
+```javascript
+const withCss = require('@zeit/next-css')
+
+if(typeof require !== 'undefined'){
+    require.extensions['.css']=file=>{}
+}
+
+module.exports = withCss({})
+```
+
+### 按需加载Ant Design
+
+1. 安装antd
+
+```shell
+cnpm i -S antd@3.23.3
+```
+
+2. 再安装一下babel-plugin-import
+
+```shell
+cnpm i -S babel-plugin-import
+```
+
+3. 在blog根目录下建立.babelrc文件
+
+```javascript
+{
+  "presets": [
+    "next/babel"
+  ], //Next.js的总配置文件，相当于继承了它本身的所有配置
+  "plugins": [ //增加新的插件，这个插件就是让antd可以按需引入，包括CSS
+    [
+      "import",
+      {
+        "libraryName": "antd"
+      }
+    ]
+  ]
+}
+```
+
+4. 在pages目录下，新建一个_app.js文件
+
+```javascript
+import App from 'next/app'
+
+import 'antd/dist/antd.css'
+
+export default App
+```
+
+---
+
+<span id="jump2"></span>
+
+## 制作博客公用头部并形成组件
+
+### 灰色背景
+
+博客需要一个浅灰背景色，并且每个页面的背景色都是一样的，所以需要一个公共的css样式文件
+
+1. 在/public文件夹下新建一个/style/,在/style文件夹下新建两个文件夹/pages和/components
+
+2. /pages文件夹下新建立comm.css文件，写入下面的CSS样式：
+
+```css
+body{
+  background-color: #f6f6f6;  
+}
+```
+
+3. /pages/_app.js引入这个CSS
+
+```javascript
+import '../public/style/pages/comm.css'
+```
+
+### 制作头部
+
+1. /blog/components/目录下新建一个Header.js文件
+
+2. /public/style/components/目录下新建header.css
+
+3. 把/Header.js文件引入到首页
+
+---
+
+<span id="jump3"></span>
+
+## 完成首页主体的两栏布局
+
+### 编写首页的左右两列布局
+
+1. index.js用Row和Col组件做左右分栏
+
+2. comm.css添加分栏的样式
+
+### 其他页面的大结构复制
+
+因为博客的列表页、详细页都采用了这种页面的总体形式
+
+所以我们在Pages目录新建list.js和detailed.js文件，然后把index.js代码复制到里边
+
+---
+
+<span id="jump4"></span>
+
+## 利用List组件 制作博客列表
+
+### 编写列表项的基本结构
+
+index.js中：
+
+1. 引入必要依赖
+
+```javascript
+import {Row, Col , List ,Icon} from 'antd'
+```
+
+```javascript
+import React,{useState} from 'react'
+```
+
+2. 用useState伪造一些假数据以先看UI效果，放在Home组件中
+
+3. 主体部分左侧分栏添加<List />，内部添加header、itemLayout、dataSource
+
+4. renderItem遍历dataSource展示文章内容，并新建其样式文件index.css
+
+---
+
+<span id="jump5"></span>
+
+## 编写“博主介绍”组件
+
+1. 在/components文件夹下面，新建一个Author.js文件，使用Avatar制作头像
+
+2. 添加author.css样式文件
+
+3. index.js中引入Author组件，在右侧分栏使用它
+
+---
+
+<span id="jump6"></span>
+
+## 编写“通用广告”组件
+
+1. 在/components文件夹下新建立一个Advert.js文件
+
+2. 在/public/components文件夹下建立一个advert.css文件
+
+3. 在index.js中用import引入Advert组件，在右侧分栏使用它
+
+---
+
+<span id="jump7"></span>
+
+## 博客底部的制作
+
+1. 在/components目录下，新建立一个Footer.js的文件
+
+2. 在/public/style/components文件夹下建立一个footer.css文件
+
+3. 引入到需要的页面
+
+---
+
+<span id="jump8"></span>
+
+## 博客List页的制作
+
+1. 把首页的代码index.js，拷贝到list.js页面中
+
+2. 使用Ant Design自带的Breadcrumb制作面包屑导航，插入到左侧分栏最上方
+
+---
+
+<span id="jump9"></span>
+
+## 博客详细页面制作
+
+### 编写基本页面结构
+
+1. 在/public/style/pages文件夹下建立一个detailed.css文件
+
+2. 完成组件的return部分
+
+### 解析Markdown语法
+
+1. 安装react-markdown，detailed.js中导入它
+
+2. 伪造一个md数据，让web页面可以渲染
+
+3. 在detailed-content中，使用react-markdown渲染markdown
+
+### Markdown导航制作
+
+1. 安装markdown-navbar，并导入markdown-navbar以及和它配套的css
+
+2. 将导航放在右边栏Advert下面
+
+3. 为导航添加固钉效果，导入Affix组件，在需要固钉的外层加上Affix组件
+
+---
+
+<span id="jump10"></span>
+
+## 中台搭建1-安装egg.js开发环境
+
+### 搭建开发环境
+
+全局安装egg.js的脚手架工具egg-init：
+
+```shell
+cnpm i egg-init -g
+```
+
+react项目根目录同级新建一个service文件夹，用脚手架在service夹中自动生成项目的基本结构：
+
+ ```shell
+egg-init --type=simple
+```
+
+安装egg项目所需要的所有依赖包：
+
+```shell
+cnpm install
+```
+
+启动服务:
+
+```shell
+npm run dev
+```
+
+---
+
+<span id="jump11"></span>
+
+## 中台搭建2-RESTful API设计简介和路由配置
+
+1. service根目录下的controller文件夹，在这个文件夹中新建两个文件夹admin（管理端使用的所有API接口）和default（客户端使用的所有API接口）文件夹
+
+2. default目录下建立一个home.js
+
+3. 在app文件夹下新建一个router文件夹，在文件夹下新建两个文件default.js和admin.js，更新router.js
+
+---
+
+<span id="jump12"></span>
+
+## 中台搭建3-Egg.js中连接mysql数据库
+
+### egg-mysql模块安装
+
+安装
+
+```shell
+cnpm i egg-mysql --save
+```
+
+在config/plugin.js中进行配置
+
+```javascript
+'use strict';
+
+//配置插件
+exports.mysql = {
+  enable: true,
+  package: 'egg-mysql'
+}
+```
+
+### 数据库连接配置
+
+1. 配置/config/config.default.js文

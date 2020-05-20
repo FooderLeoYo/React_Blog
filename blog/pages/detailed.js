@@ -8,15 +8,18 @@ import hljs from "highlight.js";
 import 'highlight.js/styles/monokai-sublime.css';
 
 import '../public/style/pages/detailed.css'
+import servicePath from '../config/apiUrl'
 import Header from '../components/Header'
 import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import Tocify from '../components/tocify.tsx'
 
-const Detailed = (props) => {
+const Detailed = (reqData) => {
   const renderer = new marked.Renderer();
   const tocify = new Tocify()
+
+  console.log(reqData)
 
   renderer.heading = function (text, level, raw) {
     const anchor = tocify.add(text, level);
@@ -37,13 +40,13 @@ const Detailed = (props) => {
     }
   });
 
-  let html = marked(props.article_content)
+  let html = marked(reqData.article_content)
 
   return (
     <>
       {/* 浏览器窗口标题 */}
       <Head>
-        <title>博客详细页</title>
+        <title>{reqData.title}</title>
       </Head>
       {/* 博客头部 */}
       <Header />
@@ -56,22 +59,20 @@ const Detailed = (props) => {
               {/* 面包屑导航 */}
               <Breadcrumb>
                 <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                <Breadcrumb.Item><a href="/list">视频列表</a></Breadcrumb.Item>
-                <Breadcrumb.Item>xxxx</Breadcrumb.Item>
+                <Breadcrumb.Item><a href={'/list?id=' + reqData.typeId}>{reqData.typeName}</a ></Breadcrumb.Item>
+                <Breadcrumb.Item>{reqData.title}</Breadcrumb.Item>
               </Breadcrumb>
             </div>
 
             {/* 文章部分 */}
             <div>
               {/* 文章标题 */}
-              <div className="detailed-title">
-                文章标题
-                </div>
+              <div className="detailed-title">{reqData.title}</div>
               {/* 文章相关信息图标 */}
               <div className="list-icon center">
-                <span><Icon type="calendar" /> 2019-06-28</span>
-                <span><Icon type="folder" /> 视频教程</span>
-                <span><Icon type="fire" /> 5498人</span>
+                <span><Icon type="calendar" /> {reqData.addTime}</span>
+                <span><Icon type="folder" /> {reqData.typeName}</span>
+                <span><Icon type="fire" /> {reqData.view_count}人</span>
               </div>
               {/* 文章内容 */}
               <div className="detailed-content"
@@ -107,7 +108,7 @@ const Detailed = (props) => {
 
 Detailed.getInitialProps = async (context) => {
   let id = context.query.id
-  const reqData = axios('http://127.0.0.1:7001/default/getArticleById/' + id).then(
+  const reqData = axios(servicePath.getArticleById + id).then(
     (res) => res.data.data[0]
   )
   return await reqData

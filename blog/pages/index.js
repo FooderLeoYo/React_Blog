@@ -4,7 +4,11 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { Row, Col, List, Icon } from 'antd'
 import axios from 'axios'
+import marked from 'marked'
+import hljs from "highlight.js";
+import 'highlight.js/styles/monokai-sublime.css';
 
+import servicePath from '../config/apiUrl'
 import '../public/style/pages/comm.css'
 import Header from '../components/Header'
 import Author from '../components/Author'
@@ -15,11 +19,30 @@ import Footer from '../components/Footer'
 const Home = (list) => {
   const [mylist, setMylist] = useState(list.data)
 
+  const renderer = new marked.Renderer();
+  marked.setOptions({
+
+    renderer: renderer,
+    gfm: true,
+    pedantic: false,
+    sanitize: false,
+    tables: true,
+    breaks: false,
+    smartLists: true,
+    smartypants: false,
+    sanitize: false,
+    xhtml: false,
+    highlight: function (code) {
+      return hljs.highlightAuto(code).value;
+    }
+
+  });
+
   return (
     <>
       {/* 浏览器窗口标题 */}
       < Head >
-        <title>Home</title>
+        <title>首页</title>
       </Head >
 
       {/* 博客头部 */}
@@ -32,7 +55,7 @@ const Home = (list) => {
           {/* 文章列表 */}
           <List
             // List的各项参数
-            header={<div>最新日志</div>}
+            header={<div>文章列表</div>}
             itemLayout="vertical"
             dataSource={mylist}
             renderItem={item => (
@@ -44,13 +67,15 @@ const Home = (list) => {
                   </Link>
                 </div>
                 {/* 一些小图标 */}
-                <div className="lit-icon">
+                <div className="list-icon">
                   <span><Icon type="calendar" />{item.addTime}</span>
                   <span><Icon type="folder" />{item.typeName}</span>
                   <span><Icon type="fire" />{item.view_count}人</span>
                 </div>
                 {/* 文章简介 */}
-                <div className="list-context">{item.introduce}</div>
+                <div className="list-context"
+                  dangerouslySetInnerHTML={{ __html: marked(item.introduce) }}
+                ></div>
               </List.Item>
             )}
           />
@@ -72,7 +97,7 @@ const Home = (list) => {
 
 // getInitialProps是nextjs自带的方法，return的值reqData会作为prop提供给组件使用
 Home.getInitialProps = async () => {
-  const reqData = axios('http://127.0.0.1:7001/default/getArticleList').then(
+  const reqData = axios(servicePath.getArticleList).then(
     (res) => res.data
   )
   return await reqData

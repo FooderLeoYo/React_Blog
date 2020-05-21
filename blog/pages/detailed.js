@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import Head from 'next/head'
 import axios from 'axios'
 import { Row, Col, Affix, Icon, Breadcrumb } from 'antd'
@@ -18,8 +17,6 @@ import Tocify from '../components/tocify.tsx'
 const Detailed = (reqData) => {
   const renderer = new marked.Renderer();
   const tocify = new Tocify()
-
-  console.log(reqData)
 
   renderer.heading = function (text, level, raw) {
     const anchor = tocify.add(text, level);

@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import marked from 'marked'
-import { Row, Col, Input, Select, Button, DatePicker } from 'antd'
+import { Row, Col, Input, Select, Button, DatePicker, message } from 'antd'
+import axios from 'axios'
+
+import servicePath from '../config/apiUrl'
 
 import '../static/css/AddArticle.css'
 
 const { Option } = Select;
 const { TextArea } = Input
 
-function AddArticle() {
-
+function AddArticle(props) {
   const [articleId, setArticleId] = useState(0)  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
   const [articleTitle, setArticleTitle] = useState('')   //文章标题
   const [articleContent, setArticleContent] = useState('')  //markdown的编辑内容
@@ -18,7 +20,11 @@ function AddArticle() {
   const [showDate, setShowDate] = useState()   //发布日期
   const [updateDate, setUpdateDate] = useState() //修改日志的日期
   const [typeInfo, setTypeInfo] = useState([]) // 文章类别信息
-  const [selectedType, setSelectType] = useState(1) //选择的文章类别
+  const [selectedType, setSelectType] = useState('请选择类型') //选择的文章类别
+
+  useEffect(() => {
+    getTypeInfo()
+  }, [])
 
   marked.setOptions({
     renderer: new marked.Renderer(),
@@ -43,6 +49,27 @@ function AddArticle() {
     setIntroducehtml(html)
   }
 
+  //从中台得到文章类别信息
+  const getTypeInfo = () => {
+
+    axios({
+      method: 'get',
+      url: servicePath.getTypeInfo,
+      header: { 'Access-Control-Allow-Origin': '*' },
+      withCredentials: true
+    }).then(
+      res => {
+        if (res.data.data == "没有登录") {
+          localStorage.removeItem('openId')
+          props.history.push('/')
+        } else {
+          setTypeInfo(res.data.data)
+        }
+
+      }
+    )
+  }
+
   return (
     <div>
       <Row gutter={5}>
@@ -60,8 +87,12 @@ function AddArticle() {
             {/* 根据类别筛选 */}
             <Col span={4}>
               &nbsp;
-                    <Select defaultValue="Sign Up" size="large">
-                <Option value="Sign Up">视频教程</Option>
+              <Select defaultValue={selectedType} size="large">
+                {
+                  typeInfo.map((item, index) => {
+                    return (<Option key={index} value={item.Id}>{item.typeName}</Option>)
+                  })
+                }
               </Select>
             </Col>
           </Row>

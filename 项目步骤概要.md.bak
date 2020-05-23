@@ -64,6 +64,22 @@
 
 [后台开发09-实现前台登录操作](#jump28)
 
+[后台开发10-中台路由守卫制作](#jump29)
+
+[后台开发11-读取添加文章页面的类别信息](#jump30)
+
+[后台开发12-添加文章的方法](#jump31)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
+[](#jump)
+
 [](#jump)
 
 ---	
@@ -918,7 +934,7 @@ import '../static/css/Login.css';
 
 2. /admin新建config文件夹，里面添加apiUrl.js文件
 
-### 后台登录方法编写checkLogin
+### 编写后台登录方法checkLogin
 
 1. /admin/src/pages/Login.js导入依赖，安装axios
 
@@ -931,4 +947,46 @@ import servicePath from '../config/apiUrl'
 2. 完善checkLogin方法
 
 3. /service/config/config.default.js的config.cors中，添加credentials，解决跨域问题
+
+---
+
+<span id="jump29"></span>
+
+## 后台开发10-中台路由守卫制作
+
+1. /service/app/下，建立一个midleware文件夹，然后在文件夹下面建立一个adminauth.js文件
+
+2. /service/config/config.default.js里增加credentials:true
+
+3. /service/app/router/admin.js，先声明并引入中间件
+
+```javascript
+ var adminauth = app.middleware.adminauth()
+```
+
+然后使用的时候，直接放在第二个参数里，就可以了
+
+---
+
+<span id="jump30"></span>
+
+## 后台开发11-读取添加文章页面的类别信息
+
+1. /service/app/controller/admin/main.js，添加getTypeInfo()方法
+
+2. /service/app/router/admin/admin.js，添加路径为/admin/getTypeInfo的get方法路由配置
+
+3. /admin/src/config/apiUrl.js，servicePath中添加checkLogin
+
+4. /admin/src/pages/AddArticle.js，引入Select、axios和servicePath
+
+5. AddArticle组件内，添加getTypeInfo方法，并在useEffect里进行使用
+
+6. 根据类别筛选部分，用map循环遍历展示typeInfo
+
+---
+
+<span id="jump31"></span>
+
+## 后台开发12-添加文章的方法
 

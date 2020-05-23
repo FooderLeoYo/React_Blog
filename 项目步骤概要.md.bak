@@ -954,7 +954,7 @@ import servicePath from '../config/apiUrl'
 
 ## 后台开发10-中台路由守卫制作
 
-1. /service/app/下，建立一个midleware文件夹，然后在文件夹下面建立一个adminauth.js文件
+1. /service/app/下，建立一个middleware文件夹，然后在文件夹下面建立一个adminauth.js文件
 
 2. /service/config/config.default.js里增加credentials:true
 
@@ -990,3 +990,24 @@ import servicePath from '../config/apiUrl'
 
 ## 后台开发12-添加文章的方法
 
+### 编写中台的addArticle接口
+
+1. /service/app/controller/admin/main.js添加addArticle()
+
+2. /service/app/router/admin.js中，添加路径为/admin/addArticle的post路由配置
+
+3. /admin/src/config/apiUrl.js中的servicePath添加addArticle
+
+### 后台增加添加文章的方法
+
+1. /admin/src/pages/AddArticle.js添加saveArticle
+
+2. 为发布文章添加onClick
+
+3. 为以下部分添加onChange，以实现更改内容后更新state
+
+	1. 根据类别筛选的Select
+
+	2. DatePicker
+
+	3. 博客标题

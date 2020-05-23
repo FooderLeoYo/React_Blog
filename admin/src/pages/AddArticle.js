@@ -59,7 +59,7 @@ function AddArticle(props) {
       withCredentials: true
     }).then(
       res => {
-        if (res.data.data == "没有登录") {
+        if (res.data.data === "没有登录") {
           localStorage.removeItem('openId')
           props.history.push('/')
         } else {
@@ -69,6 +69,55 @@ function AddArticle(props) {
       }
     )
   }
+
+//保存文章的方法
+const saveArticle = ()=>{
+  if(selectedType === '请选择类型'){
+      message.error('必须选择文章类别')
+      return false
+  }else if(!articleTitle){
+      message.error('文章名称不能为空')
+      return false
+  }else if(!articleContent){
+      message.error('文章内容不能为空')
+      return false
+  }else if(!introducemd){
+      message.error('简介不能为空')
+      return false
+  }else if(!showDate){
+      message.error('发布日期不能为空')
+      return false
+  }
+
+  let dataProps={}   //传递到接口的参数
+  dataProps.id = Math.random() * 23333 + 6666
+  dataProps.type_id = selectedType 
+  dataProps.title = articleTitle
+  dataProps.article_content =articleContent
+  dataProps.introduce =introducemd
+  let datetext= showDate.replace('-','/') //把字符串转换成时间戳
+  dataProps.addTime =(new Date(datetext).getTime())/1000
+
+
+  if(articleId === 0){
+      dataProps.view_count =Math.ceil(Math.random()*100)+1000
+      axios({
+          method: 'post',
+          url: servicePath.addArticle,
+          data: dataProps,
+          withCredentials: true
+      }).then(
+          res=>{
+              setArticleId(res.data.insertId)
+              if(res.data.isScuccess){
+                  message.success('文章保存成功')
+              }else{
+                  message.error('文章保存失败');
+              }
+          }
+      ).catch(() => message.error('服务器出错'))
+  }
+} 
 
   return (
     <div>
@@ -82,15 +131,16 @@ function AddArticle(props) {
             <Col span={20}>
               <Input
                 placeholder="博客标题"
-                size="large" />
+                size="large" 
+                onChange={e => setArticleTitle(e.target.value)}/>
             </Col>
             {/* 根据类别筛选 */}
             <Col span={4}>
               &nbsp;
-              <Select defaultValue={selectedType} size="large">
+              <Select defaultValue={selectedType} size="large" onChange={value => setSelectType(value)}>
                 {
                   typeInfo.map((item, index) => {
-                    return (<Option key={index} value={item.Id}>{item.typeName}</Option>)
+                    return (<Option key={index} value={item.id}>{item.typeName}</Option>)
                   })
                 }
               </Select>
@@ -125,7 +175,7 @@ function AddArticle(props) {
             {/* 暂存文章和暂存文章按钮 */}
             <Col span={24}>
               <Button size="large">暂存文章</Button>&nbsp;
-              <Button type="primary" size="large" >暂存文章</Button>
+              <Button type="primary" size="large" onClick={saveArticle}>发布文章</Button>
               <br />
             </Col>
             {/* 文章简介部分 */}
@@ -147,7 +197,8 @@ function AddArticle(props) {
               <div className="date-select">
                 <DatePicker
                   placeholder="发布日期"
-                  size="large" />
+                  size="large" 
+                  onChange={(date,dateString) => setShowDate(dateString)} />
               </div>
             </Col>
           </Row>

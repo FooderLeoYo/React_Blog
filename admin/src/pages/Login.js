@@ -45,9 +45,6 @@ function Login(props) {
       }
     )
 
-    // setTimeout(() => {
-    //   setIsLoading(false)
-    // }, 1000)
   }
 
   return (

@@ -1,12 +1,11 @@
 import { Avatar, Divider } from 'antd'
 import '../public/style/components/author.css'
-// import avaImg from '../public/img/avatar.jpg'
 
 
 const Author = () => {
   return (
     <div className="author-div comm-box">
-      <div> <Avatar size={100} src="https://raw.githubusercontent.com/FooderLeoYo/React_Blog/master/avatar.jpg" /></div>
+      <div> <Avatar size={100} src="http://121.37.185.108/reactblog/blog/public/img/avatar.jpg" /></div>
       <div className="author-introduction">
         个人简介
         <Divider>社交账号</Divider>

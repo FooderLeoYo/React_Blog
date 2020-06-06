@@ -110,7 +110,6 @@ function ArticleList(props) {
 
     </div>
   )
-
 }
 
 export default ArticleList

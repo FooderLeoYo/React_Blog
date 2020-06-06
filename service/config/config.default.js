@@ -27,13 +27,13 @@ module.exports = appInfo => {
     // database configuration
     client: {
       // host
-      host: 'localhost',
+      host: '121.37.185.108',
       // port
       port: '3306',
       // username
       user: 'root',
       // password
-      password: '1111',
+      password: 'Panghao6!',
       // database
       database: 'react_blog',
     },
@@ -51,10 +51,15 @@ module.exports = appInfo => {
   };
 
   config.cors = {
-    origin: 'http://localhost:3000',
-    credentials: true,  // 允许Cook可以跨域
+    origin: '*',
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
   };
+
+  // config.cors = {
+  //   origin: '*',
+  //   credentials: true,  // 允许Cook可以跨域
+  //   allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS'
+  // };
 
   return {
     ...config,

@@ -6,8 +6,8 @@ import marked from 'marked'
 import hljs from "highlight.js";
 import 'highlight.js/styles/monokai-sublime.css';
 
-import '../public/style/pages/detailed.css'
-import servicePath from '../config/apiUrl'
+import '../assets/style/pages/detailed.css'
+import { servicePath } from '../network/apiUrl'
 import Header from '../components/Header'
 import Author from '../components/Author'
 import Advert from '../components/Advert'

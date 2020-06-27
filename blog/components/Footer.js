@@ -1,4 +1,4 @@
-import '../public/style/components/footer.css'
+import '../assets/style/components/footer.css'
 
 const Footer = () => (
   <div className="footer-div">

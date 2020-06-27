@@ -4,59 +4,68 @@ import Router from 'next/router'
 import Link from 'next/link'
 import axios from 'axios'
 
-import servicePath from '../config/apiUrl'
-import '../public/style/components/header.css'
+import { servicePath, homePage } from '../network/apiUrl'
+import '../assets/style/components/header.css'
 
 import { Row, Col, Menu, Icon } from 'antd'
 
 const Header = () => {
+  /* 以下为初始化 */
   const [navArray, setNavArray] = useState([])
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(servicePath.getTypeInfo).then(
-        res => res.data.data
-      )
-      setNavArray(result)
-    }
-    // 手动调用一下fetchData令其执行
-    fetchData()
-  }, [])
 
-  // 跳转到列表页
+  useEffect(() => {
+    getData()
+  }, []) // 传递空数组作为第二个参数，表示仅在组件挂载和卸载时执行
+
+
+  /* 以下为相关方法 */
+  // 获取导航类别的数据的方法
+  const getData = async () => {
+    const requestRes = await axios(servicePath.getTypeInfo)
+    const showData = requestRes.data.data
+    setNavArray(showData)
+  }
+
+  // 点击列表后跳转到对应页的方法
   const handleClick = (e) => {
-    if (e.key == 0) {
+    if (e.key === 0) {
       Router.push('/index')
     } else {
       Router.push('/list?id=' + e.key)
     }
   }
 
+
+  /* JSX部分 */
   return (
     < div className="header" >
-      {/* 头部左侧博客图标及简介 */}
       < Row type="flex" justify="center" >
         {/* antd栅格适配 */}
-        < Col xs={24} sm={24} md={10} lg={15} xl={12} >
-          <span className="header-logo">博客</span>
-          <span className="header-txt">博客简介内容</span>
+
+        {/* 头部左侧博客图标及简介 */}
+        < Col xs={20} sm={20} md={12} lg={14} xl={15} >
+          <span className="header-logo">
+            <a href={homePage}>BLOG</a>
+          </span>
+          <span className="header-txt">BLOG basic inroduce</span>
         </Col >
 
         {/* 头部右侧导航 */}
-        < Col className="memu-div" xs={0} sm={0} md={14} lg={8} xl={6} >
+        < Col className="ant-meu" xs={4} sm={4} md={12} lg={10} xl={9} >
           <Menu
             mode="horizontal"
             onClick={handleClick}
           >
             {/* Menu.Item中只有首页是写死的 */}
-            <Menu.Item key="0">
+            <Menu.Item key="0" >
               <Icon type="home" />
-                    首页
+                    Home
             </Menu.Item>
             {/* 遍历navArray动态生成Menu.Item */}
             {
               navArray.map((item) => {
                 return (
-                  <Menu.Item key={item.id}>
+                  <Menu.Item key={item.id} className="ant-menu-item">
                     <Icon type={item.icon} />
                     {item.typeName}
                   </Menu.Item>

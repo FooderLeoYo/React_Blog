@@ -16,3 +16,19 @@
   margin-left: .5rem;
   margin-right: .5rem;
 }
+
+.qq{
+  position: relative; 
+  display: inline-block;
+}
+.qq img{
+  position: absolute;   
+  left: -3rem;   
+  top: 2rem;
+  display:none;
+  height: 8rem;
+  width: 8rem;
+}
+.qq:hover img{
+  display: block;
+}

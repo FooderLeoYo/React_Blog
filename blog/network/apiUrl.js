@@ -1,5 +1,5 @@
-// let ipUrl = 'http://121.37.185.108:7001/default/'
-let ipUrl = 'http://127.0.0.1:7001/default/'
+// let ipUrl = 'http://121.37.185.108:7001/blog/'
+let ipUrl = 'http://127.0.0.1:7001/blog/'
 
 let servicePath = {
   getArticleList: ipUrl + 'getArticleList', //  首页文章列表接口

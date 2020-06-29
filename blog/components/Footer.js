@@ -2,7 +2,7 @@ import '../assets/style/components/footer.css'
 
 const Footer = () => (
   <div className="footer-div">
-    <div>本系统由 React+Node+Ant Desgin驱动 </div>
+    <div>Powered by React+Node+Ant Desgin</div>
     <div>www.wahahaha.com</div>
   </div>
 )

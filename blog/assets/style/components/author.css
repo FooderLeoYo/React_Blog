@@ -32,3 +32,19 @@
 .qq:hover img{
   display: block;
 }
+
+.wechat{
+  position: relative; 
+  display: inline-block;
+}
+.wechat img{
+  position: absolute;   
+  left: -3rem;   
+  top: 2rem;
+  display:none;
+  height: 8rem;
+  width: 8rem;
+}
+.wechat:hover img{
+  display: block;
+}

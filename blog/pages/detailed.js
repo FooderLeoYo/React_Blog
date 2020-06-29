@@ -14,15 +14,12 @@ import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 import Tocify from '../components/tocify.tsx'
 
-const Detailed = (reqData) => {
+const Detailed = (showData) => {
+  /* 以下为组件初始化部分 */
+  const [article, setArticle] = useState(showData)
+
+  // 配置marked
   const renderer = new marked.Renderer();
-  const tocify = new Tocify()
-
-  renderer.heading = function (text, level, raw) {
-    const anchor = tocify.add(text, level);
-    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
-  };
-
   marked.setOptions({
     renderer: renderer,
     gfm: true,
@@ -37,13 +34,20 @@ const Detailed = (reqData) => {
     }
   });
 
-  let html = marked(reqData.article_content)
+  // 配置tocify
+  const tocify = new Tocify()
+  renderer.heading = function (text, level, raw) {
+    const anchor = tocify.add(text, level);
+    return `<a id="${anchor}" href="#${anchor}" class="anchor-fix"><h${level}>${text}</h${level}></a>\n`;
+  };
+  let html = marked(article.article_content)
 
+  /* 以下为JSX部分 */
   return (
     <>
       {/* 浏览器窗口标题 */}
       <Head>
-        <title>{reqData.title}</title>
+        <title>{article.title}</title>
       </Head>
       {/* 博客头部 */}
       <Header />
@@ -56,20 +60,20 @@ const Detailed = (reqData) => {
               {/* 面包屑导航 */}
               <Breadcrumb>
                 <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
-                <Breadcrumb.Item><a href={'/list?id=' + reqData.typeId}>{reqData.typeName}</a ></Breadcrumb.Item>
-                <Breadcrumb.Item>{reqData.title}</Breadcrumb.Item>
+                <Breadcrumb.Item><a href={'/list?id=' + article.typeId}>{article.typeName}</a ></Breadcrumb.Item>
+                <Breadcrumb.Item>{article.title}</Breadcrumb.Item>
               </Breadcrumb>
             </div>
 
             {/* 文章部分 */}
             <div>
               {/* 文章标题 */}
-              <div className="detailed-title">{reqData.title}</div>
+              <div className="detailed-title">{article.title}</div>
               {/* 文章相关信息图标 */}
               <div className="list-icon center">
-                <span><Icon type="calendar" /> {reqData.addTime}</span>
-                <span><Icon type="folder" /> {reqData.typeName}</span>
-                <span><Icon type="fire" /> {reqData.view_count}人</span>
+                <span><Icon type="calendar" /> {article.addTime}</span>
+                <span><Icon type="folder" /> {article.typeName}</span>
+                <span><Icon type="fire" /> {article.view_count}人</span>
               </div>
               {/* 文章内容 */}
               <div className="detailed-content"
@@ -103,12 +107,12 @@ const Detailed = (reqData) => {
   )
 }
 
+/* 以下为相关方法 */
 Detailed.getInitialProps = async (context) => {
   let id = context.query.id
-  const reqData = axios(servicePath.getArticleById + id).then(
-    (res) => res.data.data[0]
-  )
-  return await reqData
+  const reqData = await axios(servicePath.getArticleById + id)
+  const showData = reqData.data.data[0]
+  return showData
 }
 
 export default Detailed

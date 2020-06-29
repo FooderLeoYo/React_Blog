@@ -14,9 +14,8 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 
-// 括号里的list就是getInitialProps的返回值reqData
-const Home = (list) => {
-  const [mylist, setMylist] = useState(list.data)
+const Home = (showData) => {
+  const [mylist, setMylist] = useState(showData.data)
 
   const renderer = new marked.Renderer();
   marked.setOptions({
@@ -51,7 +50,7 @@ const Home = (list) => {
           {/* 文章列表 */}
           <List
             // List的各项参数
-            header={<div>Article List</div>}
+            header={<div>All Articles</div>}
             itemLayout="vertical"
             dataSource={mylist}
             renderItem={item => (
@@ -64,9 +63,9 @@ const Home = (list) => {
                 </div>
                 {/* 一些小图标 */}
                 <div className="list-icon">
-                  <span><Icon type="calendar" />{item.addTime}</span>
-                  <span><Icon type="folder" />{item.typeName}</span>
-                  <span><Icon type="fire" />{item.view_count}人</span>
+                  <span><Icon type="calendar" /> {item.addTime}</span>
+                  <span><Icon type="folder" /> {item.typeName}</span>
+                  <span><Icon type="fire" /> {item.view_count} viewed</span>
                 </div>
                 {/* 文章简介 */}
                 <div className="list-context"
@@ -93,10 +92,9 @@ const Home = (list) => {
 
 // getInitialProps是nextjs自带的方法，return的值reqData会作为prop提供给组件使用
 Home.getInitialProps = async () => {
-  const reqData = axios(servicePath.getArticleList).then(
-    res => res.data
-  )
-  return await reqData
+  const reqData = await axios(servicePath.getArticleList)
+  const showData = reqData.data
+  return await showData
 }
 
 export default Home

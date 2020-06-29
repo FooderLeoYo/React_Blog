@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
 import Router from 'next/router'
-import Link from 'next/link'
 import axios from 'axios'
 
 import { servicePath, homePage } from '../network/apiUrl'
@@ -16,7 +15,6 @@ const Header = () => {
   useEffect(() => {
     getData()
   }, []) // 传递空数组作为第二个参数，表示仅在组件挂载和卸载时执行
-
 
   /* 以下为相关方法 */
   // 获取导航类别的数据的方法
@@ -34,7 +32,6 @@ const Header = () => {
       Router.push('/list?id=' + e.key)
     }
   }
-
 
   /* JSX部分 */
   return (
@@ -56,11 +53,6 @@ const Header = () => {
             mode="horizontal"
             onClick={handleClick}
           >
-            {/* Menu.Item中只有首页是写死的 */}
-            <Menu.Item key="0" >
-              <Icon type="home" />
-                    Home
-            </Menu.Item>
             {/* 遍历navArray动态生成Menu.Item */}
             {
               navArray.map((item) => {

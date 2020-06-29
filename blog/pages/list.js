@@ -11,14 +11,17 @@ import Author from '../components/Author'
 import Advert from '../components/Advert'
 import Footer from '../components/Footer'
 
-const MyList = (list) => {
+const MyList = (showData) => {
+  /* 以下为组件初始化部分 */
+  const [mylist, setMylist] = useState(showData.data)
 
-  const [mylist, setMylist] = useState(list.data)
-
+  // 因为点击右上导航时list页面会变化，因此使用useEffect
+  // 而index和detailed页面一旦加载后就不变了，因此不需要useEffect
   useEffect(() => {
-    setMylist(list.data)
+    setMylist(showData.data)
   })
 
+  /* 以下为JSX部分 */
   return (
     <>
       {/* 头部 */}
@@ -34,14 +37,14 @@ const MyList = (list) => {
           <div className="bread-div">
             {/* 面包屑导航 */}
             <Breadcrumb>
-              <Breadcrumb.Item><a href="/">首页</a></Breadcrumb.Item>
+              <Breadcrumb.Item><a href="/">Home</a></Breadcrumb.Item>
               <Breadcrumb.Item>{mylist[0].typeName}</Breadcrumb.Item>
             </Breadcrumb>
           </div>
 
           {/* 文章列表 */}
           <List
-            header={<div>{mylist[0].typeName}列表</div>}
+            header={<div>{mylist[0].typeName} List</div>}
             itemLayout="vertical"
             dataSource={mylist}
             renderItem={item => (
@@ -54,9 +57,9 @@ const MyList = (list) => {
                 </div>
                 {/* 一些小图标 */}
                 <div className="list-icon">
-                  <span><Icon type="calendar" />{item.addTime}</span>
-                  <span><Icon type="folder" />{item.typeName}</span>
-                  <span><Icon type="fire" />{item.view_count}人</span>
+                  <span><Icon type="calendar" /> {item.addTime}</span>
+                  <span><Icon type="folder" /> {item.typeName}</span>
+                  <span><Icon type="fire" /> {item.view_count} viewed</span>
                 </div>
                 <div className="list-context">{item.introduce}</div>
               </List.Item>
@@ -78,13 +81,14 @@ const MyList = (list) => {
   )
 }
 
-MyList.getInitialProps = async (context) => {
-
+/* 以下为相关方法 */
+MyList.getInitialProps = async context => {
   let id = context.query.id
-  const reqData = axios(servicePath.getListById + id).then(
-    res => res.data
-  )
-  return await reqData
+
+  const reqData = await axios(servicePath.getListById + id)
+  const showData = reqData.data
+
+  return showData
 }
 
 export default MyList
